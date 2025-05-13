@@ -11,7 +11,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Supabase environment variables are missing. Make sure you have connected to Supabase in Lovable.');
 }
 
+// Create the Supabase client with proper error handling
 export const supabase = createClient<Database>(
-  supabaseUrl || 'https://placeholder-url.supabase.co',
-  supabaseAnonKey || 'placeholder-key'
+  supabaseUrl || '',
+  supabaseAnonKey || ''
 );

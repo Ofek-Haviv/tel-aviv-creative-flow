@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   
   const { signUp } = useAuth();
   const { toast } = useToast();
@@ -20,8 +22,10 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage("");
     
     if (!email || !password) {
+      setErrorMessage("All fields are required");
       toast({
         title: "Error",
         description: "All fields are required",
@@ -31,6 +35,7 @@ const Register = () => {
     }
 
     if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
       toast({
         title: "Error",
         description: "Passwords do not match",
@@ -41,10 +46,15 @@ const Register = () => {
 
     try {
       setIsLoading(true);
-      const { error } = await signUp(email, password);
+      console.log("Attempting to sign up with:", { email });
+      const { error, data } = await signUp(email, password);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Signup error:", error);
+        throw error;
+      }
 
+      console.log("Signup successful:", data);
       toast({
         title: "Registration successful",
         description: "Please check your email to verify your account.",
@@ -53,7 +63,8 @@ const Register = () => {
       // Redirect to login
       navigate("/login");
     } catch (error: any) {
-      console.error(error);
+      console.error("Caught error during registration:", error);
+      setErrorMessage(error.message || "An error occurred during registration. Please try again.");
       toast({
         title: "Registration failed",
         description: error.message || "An error occurred during registration. Please try again.",
@@ -75,6 +86,11 @@ const Register = () => {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            {errorMessage && (
+              <Alert variant="destructive">
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
