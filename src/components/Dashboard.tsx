@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import TaskCard, { Task } from "./TaskCard";
 import ProjectCard, { Project } from "./ProjectCard";
@@ -9,7 +10,7 @@ import ClickUpDashboard from "./ClickUpDashboard";
 import { useState } from "react";
 
 // Sample data
-const tasks: Task[] = [
+const initialTasks: Task[] = [
   {
     id: "1",
     title: "Reply to fabric supplier",
@@ -98,9 +99,12 @@ const businessMetrics: DashboardMetric[] = [
 const Dashboard = () => {
   const navigate = useNavigate();
   const [clickUpConnected, setClickUpConnected] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
   
   const handleToggleComplete = (id: string, completed: boolean) => {
-    console.log(`Task ${id} marked as ${completed ? 'completed' : 'incomplete'}`);
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed } : task
+    ));
   };
 
   const handleProjectClick = (projectId: string) => {

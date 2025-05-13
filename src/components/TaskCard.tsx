@@ -22,6 +22,11 @@ interface TaskCardProps {
 const TaskCard = ({ task, onToggleComplete, className }: TaskCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const handleCheckboxChange = (checked: boolean) => {
+    // Prevent click event bubbling to parent div to avoid expanding when clicking checkbox
+    onToggleComplete(task.id, checked);
+  };
+
   return (
     <div 
       className={cn(
@@ -35,9 +40,7 @@ const TaskCard = ({ task, onToggleComplete, className }: TaskCardProps) => {
         <div className="flex-shrink-0 mt-0.5" onClick={(e) => e.stopPropagation()}>
           <Checkbox
             checked={task.completed}
-            onCheckedChange={(checked) => {
-              onToggleComplete(task.id, checked as boolean);
-            }}
+            onCheckedChange={handleCheckboxChange}
             className="h-5 w-5"
           />
         </div>
