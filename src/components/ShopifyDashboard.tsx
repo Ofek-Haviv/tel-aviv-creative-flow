@@ -19,7 +19,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { Shopify } from "lucide-react";
+import { ShoppingCart, BarChart2 } from "lucide-react";
 
 // Placeholder data (would be replaced with actual Shopify API data)
 const sampleSalesData = [
@@ -57,13 +57,13 @@ const ShopifyDashboard: React.FC<ShopifyDashboardProps> = ({
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Shopify className="h-5 w-5" />
+            <ShoppingCart className="h-5 w-5" />
             Shopify Integration
           </CardTitle>
           <CardDescription>Connect your Shopify store to view sales data</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-10">
-          <Shopify className="h-16 w-16 mb-4 text-muted-foreground" />
+          <ShoppingCart className="h-16 w-16 mb-4 text-muted-foreground" />
           <p className="text-center text-muted-foreground mb-4">
             Connect your Shopify store to see real-time sales data, inventory levels, and customer insights.
           </p>
@@ -80,7 +80,7 @@ const ShopifyDashboard: React.FC<ShopifyDashboardProps> = ({
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <Shopify className="h-5 w-5" />
+            <ShoppingCart className="h-5 w-5" />
             Shopify Sales
           </CardTitle>
           <CardDescription>Overview of your store performance</CardDescription>

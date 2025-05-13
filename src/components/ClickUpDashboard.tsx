@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ClickUp } from "lucide-react";
+import { ClipboardList, CheckCircle } from "lucide-react";
 
 // Placeholder data (would be replaced with actual ClickUp API data)
 const techTasks = [
@@ -73,13 +73,13 @@ const ClickUpDashboard: React.FC<ClickUpDashboardProps> = ({
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <ClickUp className="h-5 w-5" />
+            <ClipboardList className="h-5 w-5" />
             ClickUp Integration
           </CardTitle>
           <CardDescription>Connect your ClickUp workspace to manage tech tasks</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-10">
-          <ClickUp className="h-16 w-16 mb-4 text-muted-foreground" />
+          <ClipboardList className="h-16 w-16 mb-4 text-muted-foreground" />
           <p className="text-center text-muted-foreground mb-4">
             Connect your ClickUp workspace to sync tasks, track progress, and manage your tech projects directly from here.
           </p>
@@ -123,7 +123,7 @@ const ClickUpDashboard: React.FC<ClickUpDashboardProps> = ({
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <ClickUp className="h-5 w-5" />
+          <ClipboardList className="h-5 w-5" />
           ClickUp Tech Tasks
         </CardTitle>
         <CardDescription>Manage your tech team tasks</CardDescription>
