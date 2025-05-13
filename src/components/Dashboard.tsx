@@ -1,10 +1,12 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import TaskCard, { Task } from "./TaskCard";
 import ProjectCard, { Project } from "./ProjectCard";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ClickUpDashboard from "./ClickUpDashboard";
+import { useState } from "react";
 
 // Sample data
 const tasks: Task[] = [
@@ -95,6 +97,7 @@ const businessMetrics: DashboardMetric[] = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [clickUpConnected, setClickUpConnected] = useState(false);
   
   const handleToggleComplete = (id: string, completed: boolean) => {
     console.log(`Task ${id} marked as ${completed ? 'completed' : 'incomplete'}`);
@@ -102,6 +105,13 @@ const Dashboard = () => {
 
   const handleProjectClick = (projectId: string) => {
     navigate(`/projects/${projectId}`);
+  };
+
+  const handleConnectClickUp = () => {
+    // In a real implementation, this would open OAuth flow or API key input
+    console.log("Connecting to ClickUp...");
+    // For demo purposes, we'll just set as connected
+    setClickUpConnected(true);
   };
 
   return (
@@ -131,77 +141,95 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Priority Tasks */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle>Priority Tasks</CardTitle>
-              <CardDescription>Tasks that need your attention today</CardDescription>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1"
-              onClick={() => navigate("/tasks")}
-            >
-              <PlusCircle className="h-4 w-4" />
-              <span>Add</span>
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {tasks.slice(0, 3).map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onToggleComplete={handleToggleComplete}
-              />
-            ))}
-            <Button 
-              variant="ghost" 
-              className="w-full text-sm text-muted-foreground"
-              onClick={() => navigate("/tasks")}
-            >
-              View all tasks
-            </Button>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="tasks" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="tasks">Personal & Business</TabsTrigger>
+          <TabsTrigger value="tech">Tech Team</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="tasks">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+            {/* Priority Tasks */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <div>
+                  <CardTitle>Priority Tasks</CardTitle>
+                  <CardDescription>Tasks that need your attention today</CardDescription>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1"
+                  onClick={() => navigate("/tasks")}
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  <span>Add</span>
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {tasks.slice(0, 3).map(task => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onToggleComplete={handleToggleComplete}
+                  />
+                ))}
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-sm text-muted-foreground"
+                  onClick={() => navigate("/tasks")}
+                >
+                  View all tasks
+                </Button>
+              </CardContent>
+            </Card>
 
-        {/* Active Projects */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle>Active Projects</CardTitle>
-              <CardDescription>Your ongoing long-term projects</CardDescription>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1"
-              onClick={() => navigate("/projects")}
-            >
-              <PlusCircle className="h-4 w-4" />
-              <span>Add</span>
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {projects.slice(0, 2).map(project => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                onClick={() => handleProjectClick(project.id)}
-              />
-            ))}
-            <Button 
-              variant="ghost" 
-              className="w-full text-sm text-muted-foreground"
-              onClick={() => navigate("/projects")}
-            >
-              View all projects
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+            {/* Active Projects */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <div>
+                  <CardTitle>Active Projects</CardTitle>
+                  <CardDescription>Your ongoing long-term projects</CardDescription>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1"
+                  onClick={() => navigate("/projects")}
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  <span>Add</span>
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {projects.slice(0, 2).map(project => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    onClick={() => handleProjectClick(project.id)}
+                  />
+                ))}
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-sm text-muted-foreground"
+                  onClick={() => navigate("/projects")}
+                >
+                  View all projects
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="tech">
+          <div className="mt-4">
+            <ClickUpDashboard 
+              isConnected={clickUpConnected}
+              onConnect={handleConnectClickUp}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

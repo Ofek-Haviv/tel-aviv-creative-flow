@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +14,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import ShopifyDashboard from "@/components/ShopifyDashboard";
 
 // Sample data
 const monthlyRevenue = [
@@ -54,6 +54,14 @@ const COLORS = ["#9b87f5", "#7E69AB", "#6E59A5", "#1A1F2C", "#D6BCFA"];
 
 const Finances = () => {
   const [period, setPeriod] = useState("month");
+  const [shopifyConnected, setShopifyConnected] = useState(false);
+
+  const handleConnectShopify = () => {
+    // In a real implementation, this would open OAuth flow or API key input
+    console.log("Connecting to Shopify...");
+    // For demo purposes, we'll just set as connected
+    setShopifyConnected(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -96,10 +104,11 @@ const Finances = () => {
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="cashflow">Cash Flow</TabsTrigger>
+          <TabsTrigger value="shopify">Shopify</TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview">
@@ -205,6 +214,15 @@ const Finances = () => {
                 </ResponsiveContainer>
               </CardContent>
             </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="shopify">
+          <div className="grid grid-cols-1 gap-6 mt-6">
+            <ShopifyDashboard 
+              isConnected={shopifyConnected}
+              onConnect={handleConnectShopify}
+            />
           </div>
         </TabsContent>
       </Tabs>
