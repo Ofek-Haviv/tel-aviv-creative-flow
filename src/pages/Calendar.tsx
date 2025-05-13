@@ -171,10 +171,10 @@ const Calendar = () => {
               onSelect={setSelectedDate}
               className="rounded-md"
               components={{
-                DayContent: ({ day }) => (
+                DayContent: (props: { date: Date }) => (
                   <div className="flex flex-col items-center">
-                    <div>{day.getDate()}</div>
-                    {hasEvents(day) && renderEventIndicators(day)}
+                    <div>{props.date.getDate()}</div>
+                    {hasEvents(props.date) && renderEventIndicators(props.date)}
                   </div>
                 ),
               }}

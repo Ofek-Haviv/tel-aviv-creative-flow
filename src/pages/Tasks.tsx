@@ -103,7 +103,7 @@ const Tasks = () => {
       const task: Task = {
         id: Date.now().toString(),
         title: newTask.title,
-        category: newTask.category as "personal" | "business" | "finance" | "design" | "urgent",
+        category: (newTask.category as "personal" | "business" | "finance" | "design" | "urgent") || "personal",
         completed: false,
         description: newTask.description,
         dueDate: selectedDate ? selectedDate.toISOString() : undefined

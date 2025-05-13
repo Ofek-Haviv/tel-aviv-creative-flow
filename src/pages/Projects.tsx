@@ -99,7 +99,7 @@ const Projects = () => {
       const project: Project = {
         id: Date.now().toString(),
         title: newProject.title,
-        category: newProject.category as "personal" | "business" | "finance" | "design" | "urgent",
+        category: (newProject.category as "personal" | "business" | "finance" | "design" | "urgent") || "business",
         description: newProject.description,
         dueDate: selectedDate ? selectedDate.toISOString() : undefined,
         progress: 0,
