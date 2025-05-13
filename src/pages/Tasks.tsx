@@ -103,7 +103,7 @@ const Tasks = () => {
       const task: Task = {
         id: Date.now().toString(),
         title: newTask.title,
-        category: (newTask.category as "personal" | "business" | "finance" | "design" | "urgent") || "personal",
+        category: newTask.category as "personal" | "business" | "finance" | "design" | "urgent",
         completed: false,
         description: newTask.description,
         dueDate: selectedDate ? selectedDate.toISOString() : undefined
@@ -174,7 +174,9 @@ const Tasks = () => {
                 <Label htmlFor="category">Category</Label>
                 <Select 
                   value={newTask.category} 
-                  onValueChange={(value: string) => setNewTask({ ...newTask, category: value })}
+                  onValueChange={(value: "personal" | "business" | "finance" | "design" | "urgent") => 
+                    setNewTask({ ...newTask, category: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />

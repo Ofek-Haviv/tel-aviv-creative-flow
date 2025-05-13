@@ -99,7 +99,7 @@ const Projects = () => {
       const project: Project = {
         id: Date.now().toString(),
         title: newProject.title,
-        category: (newProject.category as "personal" | "business" | "finance" | "design" | "urgent") || "business",
+        category: newProject.category as "personal" | "business" | "finance" | "design" | "urgent",
         description: newProject.description,
         dueDate: selectedDate ? selectedDate.toISOString() : undefined,
         progress: 0,
@@ -180,7 +180,9 @@ const Projects = () => {
                 <Label htmlFor="category">Category</Label>
                 <Select 
                   value={newProject.category} 
-                  onValueChange={(value: string) => setNewProject({ ...newProject, category: value })}
+                  onValueChange={(value: "personal" | "business" | "finance" | "design") => 
+                    setNewProject({ ...newProject, category: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
