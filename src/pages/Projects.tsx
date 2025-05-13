@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import ProjectCard, { Project } from "@/components/ProjectCard";
+import ProjectCard, { Project, ProjectTask } from "@/components/ProjectCard";
 import { Input } from "@/components/ui/input";
 import { PlusCircle, Search } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -12,6 +12,64 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+
+// Sample project tasks data
+const projectTasks: Record<string, ProjectTask[]> = {
+  "1": [
+    { id: "1-1", title: "Plan photoshoot locations", completed: true },
+    { id: "1-2", title: "Design promotional materials", completed: true },
+    { id: "1-3", title: "Contact influencers for promotion", completed: true },
+    { id: "1-4", title: "Create social media campaign", completed: true },
+    { id: "1-5", title: "Finalize store displays", completed: true },
+    { id: "1-6", title: "Prepare press release", completed: false },
+    { id: "1-7", title: "Organize launch event", completed: false },
+    { id: "1-8", title: "Film video content", completed: false },
+    { id: "1-9", title: "Update online store", completed: false },
+    { id: "1-10", title: "Brief sales team", completed: false },
+    { id: "1-11", title: "Prepare email newsletter", completed: false },
+    { id: "1-12", title: "Final review of collection", completed: false },
+  ],
+  "2": [
+    { id: "2-1", title: "Create mood board", completed: true },
+    { id: "2-2", title: "Draft initial layout", completed: true },
+    { id: "2-3", title: "Source new display fixtures", completed: false },
+    { id: "2-4", title: "Schedule contractor meetings", completed: false },
+    { id: "2-5", title: "Finalize budget", completed: false },
+    { id: "2-6", title: "Select color scheme", completed: false },
+    { id: "2-7", title: "Order custom fixtures", completed: false },
+    { id: "2-8", title: "Create timeline for implementation", completed: false },
+  ],
+  "3": [
+    { id: "3-1", title: "Collect Q2 sales data", completed: true },
+    { id: "3-2", title: "Analyze profit margins", completed: true },
+    { id: "3-3", title: "Compare to previous quarters", completed: true },
+    { id: "3-4", title: "Create presentation slides", completed: true },
+    { id: "3-5", title: "Draft executive summary", completed: false },
+    { id: "3-6", title: "Prepare investor Q&A", completed: false },
+  ],
+  "4": [
+    { id: "4-1", title: "Audit current website", completed: true },
+    { id: "4-2", title: "Create wireframes", completed: true },
+    { id: "4-3", title: "Design mobile views", completed: true },
+    { id: "4-4", title: "Update product photography", completed: false },
+    { id: "4-5", title: "Implement checkout improvements", completed: false },
+    { id: "4-6", title: "SEO optimization", completed: false },
+    { id: "4-7", title: "User testing", completed: false },
+    { id: "4-8", title: "Browser compatibility testing", completed: false },
+    { id: "4-9", title: "Performance optimization", completed: false },
+    { id: "4-10", title: "Launch new site", completed: false },
+  ],
+  "5": [
+    { id: "5-1", title: "Research relevant influencers", completed: true },
+    { id: "5-2", title: "Create campaign brief", completed: true },
+    { id: "5-3", title: "Negotiate contracts", completed: true },
+    { id: "5-4", title: "Develop content guidelines", completed: true },
+    { id: "5-5", title: "Ship products to influencers", completed: true },
+    { id: "5-6", title: "Review content drafts", completed: false },
+    { id: "5-7", title: "Coordinate posting schedule", completed: false },
+    { id: "5-8", title: "Track campaign metrics", completed: false },
+  ],
+};
 
 // Sample data
 const initialProjects: Project[] = [
@@ -93,6 +151,8 @@ const Projects = () => {
     }
   });
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   const handleAddProject = () => {
     if (newProject.title?.trim()) {
@@ -122,7 +182,14 @@ const Projects = () => {
         }
       });
       setSelectedDate(undefined);
+
+      // Initialize empty task array for the new project
+      projectTasks[project.id] = [];
     }
+  };
+
+  const handleProjectSelect = (projectId: string) => {
+    setSelectedProject(projectId);
   };
 
   const filteredProjects = projects
@@ -180,7 +247,7 @@ const Projects = () => {
                 <Label htmlFor="category">Category</Label>
                 <Select 
                   value={newProject.category} 
-                  onValueChange={(value: "personal" | "business" | "finance" | "design") => 
+                  onValueChange={(value: "personal" | "business" | "finance" | "design" | "urgent") => 
                     setNewProject({ ...newProject, category: value })
                   }
                 >
@@ -192,6 +259,7 @@ const Projects = () => {
                     <SelectItem value="business">Business</SelectItem>
                     <SelectItem value="finance">Finance</SelectItem>
                     <SelectItem value="design">Design</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -284,6 +352,14 @@ const Projects = () => {
           >
             Design
           </Button>
+          <Button 
+            variant={filter === "urgent" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter("urgent")}
+            className="whitespace-nowrap"
+          >
+            Urgent
+          </Button>
         </div>
       </div>
 
@@ -293,6 +369,8 @@ const Projects = () => {
             <ProjectCard
               key={project.id}
               project={project}
+              projectTasks={projectTasks[project.id] || []}
+              onClick={() => handleProjectSelect(project.id)}
             />
           ))
         ) : (

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, CheckCircle, CalendarDays, Wallet, Settings, Menu, X } from "lucide-react";
+import { LayoutDashboard, CheckCircle, FolderKanban, CalendarDays, Wallet, Settings, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Navigation = () => {
@@ -24,6 +24,7 @@ const Navigation = () => {
   const navItems = [
     { name: "Dashboard", path: "/", icon: LayoutDashboard },
     { name: "Tasks", path: "/tasks", icon: CheckCircle },
+    { name: "Projects", path: "/projects", icon: FolderKanban },
     { name: "Calendar", path: "/calendar", icon: CalendarDays },
     { name: "Finances", path: "/finances", icon: Wallet },
     { name: "Settings", path: "/settings", icon: Settings },
