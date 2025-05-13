@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useShopify } from "@/hooks/useShopify";
 import { format } from 'date-fns';
-import { BarChart, LineChart, PieChart } from '@/components/ui/chart';
+import { BarChart, LineChart, PieChart } from '@/components/ui/charts';
 import { Loader2 } from 'lucide-react';
 
 // Add these interfaces to fix the type error
