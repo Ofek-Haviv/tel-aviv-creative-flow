@@ -6,61 +6,51 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
-  BarChart,
-  Bar,
+  PieChart,
+  Pie,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
-import { ShoppingCart, BarChart2, RefreshCcw, DownloadCloud } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
-
-// Placeholder data (would be replaced with actual Shopify API data)
-const sampleSalesData = [
-  { name: "Jan", sales: 4200 },
-  { name: "Feb", sales: 3800 },
-  { name: "Mar", sales: 5100 },
-  { name: "Apr", sales: 6200 },
-  { name: "May", sales: 7500 },
-  { name: "Jun", sales: 8900 },
-];
-
-const sampleProductData = [
-  { name: "Dresses", value: 8400 },
-  { name: "Tops", value: 6700 },
-  { name: "Pants", value: 5400 },
-  { name: "Accessories", value: 4100 },
-];
+import { ShoppingCart, RefreshCcw, DownloadCloud } from "lucide-react";
+import { useShopify } from "@/hooks/useShopify";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const COLORS = ["#9b87f5", "#7E69AB", "#6E59A5", "#1A1F2C", "#D6BCFA"];
 
-interface ShopifyDashboardProps {
-  isConnected?: boolean;
-  onConnect?: () => void;
-}
+const ShopifyDashboard = () => {
+  const {
+    isConnected,
+    isLoading,
+    isImporting,
+    lastImported,
+    salesData,
+    productData,
+    connectShopify,
+    importData
+  } = useShopify();
+  const [shopUrl, setShopUrl] = useState("");
+  const [showConnectDialog, setShowConnectDialog] = useState(false);
 
-const ShopifyDashboard = ({ isConnected = false, onConnect }: ShopifyDashboardProps) => {
-  const [isImporting, setIsImporting] = useState(false);
-  const [lastImported, setLastImported] = useState<Date | null>(null);
-
-  const handleImportData = () => {
-    setIsImporting(true);
-    
-    // Simulate API call with timeout
-    setTimeout(() => {
-      setIsImporting(false);
-      setLastImported(new Date());
-      toast({
-        title: "Data imported successfully",
-        description: "Your Shopify data has been updated.",
-      });
-    }, 2000);
+  const handleConnectShopify = () => {
+    connectShopify(shopUrl);
+    setShowConnectDialog(false);
   };
+
+  if (isLoading) {
+    return (
+      <Card className="w-full">
+        <CardContent className="flex justify-center items-center py-10">
+          <p>Loading Shopify integration...</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (!isConnected) {
     return (
@@ -77,7 +67,34 @@ const ShopifyDashboard = ({ isConnected = false, onConnect }: ShopifyDashboardPr
           <p className="text-center text-muted-foreground mb-4">
             Connect your Shopify store to see real-time sales data, inventory levels, and customer insights.
           </p>
-          <Button onClick={onConnect}>Connect Shopify</Button>
+          <Dialog open={showConnectDialog} onOpenChange={setShowConnectDialog}>
+            <DialogTrigger asChild>
+              <Button>Connect Shopify</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Connect to Shopify</DialogTitle>
+                <DialogDescription>
+                  Enter your Shopify store URL to connect your store.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="shopUrl">Store URL</Label>
+                  <Input
+                    id="shopUrl"
+                    placeholder="your-store.myshopify.com"
+                    value={shopUrl}
+                    onChange={(e) => setShopUrl(e.target.value)}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowConnectDialog(false)}>Cancel</Button>
+                <Button onClick={handleConnectShopify}>Connect</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     );
@@ -103,7 +120,7 @@ const ShopifyDashboard = ({ isConnected = false, onConnect }: ShopifyDashboardPr
             <Button 
               size="sm" 
               variant="outline" 
-              onClick={handleImportData}
+              onClick={importData}
               disabled={isImporting}
               className="flex items-center gap-1"
             >
@@ -131,7 +148,7 @@ const ShopifyDashboard = ({ isConnected = false, onConnect }: ShopifyDashboardPr
           </CardHeader>
           <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={sampleSalesData}>
+              <AreaChart data={salesData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -151,7 +168,7 @@ const ShopifyDashboard = ({ isConnected = false, onConnect }: ShopifyDashboardPr
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={sampleProductData}
+                  data={productData}
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
@@ -159,7 +176,7 @@ const ShopifyDashboard = ({ isConnected = false, onConnect }: ShopifyDashboardPr
                   dataKey="value"
                   label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
-                  {sampleProductData.map((entry, index) => (
+                  {productData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

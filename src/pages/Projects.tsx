@@ -2,7 +2,6 @@
 import ProjectFilters from "@/components/ProjectFilters";
 import NewProjectDialog from "@/components/NewProjectDialog";
 import ProjectsList from "@/components/ProjectsList";
-import { projectTasks } from "@/data/projectsData";
 import { useProjects } from "@/hooks/useProjects";
 
 const Projects = () => {
@@ -12,6 +11,8 @@ const Projects = () => {
     searchTerm,
     setSearchTerm,
     filteredProjects,
+    projectTasks,
+    isLoading,
     handleAddProject,
     handleProjectSelect
   } = useProjects();
@@ -37,6 +38,7 @@ const Projects = () => {
         projects={filteredProjects}
         projectTasks={projectTasks}
         onProjectSelect={handleProjectSelect}
+        isLoading={isLoading}
       />
     </div>
   );
