@@ -35,7 +35,18 @@ const Login = () => {
       setIsLoading(true);
       const { error } = await signIn(email, password);
       
-      if (error) throw error;
+      if (error) {
+        if (error.message === "Email not confirmed") {
+          toast({
+            title: "Email not confirmed",
+            description: "Please check your email and click the confirmation link before logging in.",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
+        return;
+      }
 
       // Redirect to the page the user was trying to access
       navigate(from, { replace: true });
